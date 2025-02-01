@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  careerspotlightbackend:
+    image: careerspotlightbackend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+      - "8443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificate.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=yourpassword
+
