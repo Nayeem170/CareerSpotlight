@@ -5,13 +5,13 @@
 namespace CareerSpotlightBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class _01_InitialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Profiles",
+                name: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -22,11 +22,11 @@ namespace CareerSpotlightBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profiles", x => x.Id);
+                    table.PrimaryKey("PK_profiles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Educations",
+                name: "educations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -38,16 +38,16 @@ namespace CareerSpotlightBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Educations", x => x.Id);
+                    table.PrimaryKey("PK_educations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Educations_Profiles_ProfileId",
+                        name: "FK_educations_profiles_ProfileId",
                         column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        principalTable: "profiles",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Experiences",
+                name: "experiences",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -59,22 +59,22 @@ namespace CareerSpotlightBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Experiences", x => x.Id);
+                    table.PrimaryKey("PK_experiences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Experiences_Profiles_ProfileId",
+                        name: "FK_experiences_profiles_ProfileId",
                         column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        principalTable: "profiles",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Educations_ProfileId",
-                table: "Educations",
+                name: "IX_educations_ProfileId",
+                table: "educations",
                 column: "ProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Experiences_ProfileId",
-                table: "Experiences",
+                name: "IX_experiences_ProfileId",
+                table: "experiences",
                 column: "ProfileId");
         }
 
@@ -82,13 +82,13 @@ namespace CareerSpotlightBackend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Educations");
+                name: "educations");
 
             migrationBuilder.DropTable(
-                name: "Experiences");
+                name: "experiences");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "profiles");
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using CareerSpotlightBackend.Models;
+﻿using CareerSpotlightBackend.Data;
+using CareerSpotlightBackend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CareerSpotlightBackend.Controllers
 {
@@ -7,41 +9,99 @@ namespace CareerSpotlightBackend.Controllers
     [Route("api/[controller]")]
     public class ProfileController : ControllerBase
     {
-        private readonly Profile _profile;
+        private readonly CareerSpotlightContext _context;
 
-        public ProfileController()
+        public ProfileController(CareerSpotlightContext context)
         {
-            _profile = new Profile(
-                name: "Jane Doe",
-                bio: "Passionate software engineer with a love for developing innovative programs."
-            )
-            {
-                Education = new List<Education>
-                {
-                    new Education
-                    {
-                        Institution = "Tech University",
-                        Degree = "B.Sc. in Computer Science",
-                        Year = 2020
-                    }
-                },
-                Experience = new List<Experience>
-                {
-                    new Experience
-                    {
-                        Company = "Innovatech Solutions",
-                        Role = "Software Developer",
-                        Years = "2020-2023"
-                    }
-                },
-                Skills = new List<string> { "C#", ".NET", "REST APIs", "SQL", "JavaScript" }
-            };
+            _context = context;
         }
 
+        // GET: api/Profile
         [HttpGet]
-        public ActionResult<Profile> GetProfile()
+        public async Task<ActionResult<IEnumerable<Profile>>> GetProfiles()
         {
-            return Ok(_profile);
+            return await _context.Profiles
+                .Include(p => p.Education)
+                .Include(p => p.Experience)
+                .ToListAsync();
+        }
+
+        // GET: api/Profile/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Profile>> GetProfile(int id)
+        {
+            var profile = await _context.Profiles
+                .Include(p => p.Education)
+                .Include(p => p.Experience)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            return profile;
+        }
+
+        // POST: api/Profile
+        [HttpPost]
+        public async Task<ActionResult<Profile>> PostProfile(Profile profile)
+        {
+            _context.Profiles.Add(profile);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetProfile), new { id = profile.Id }, profile);
+        }
+
+        // PUT: api/Profile/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProfile(int id, Profile profile)
+        {
+            if (id != profile.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(profile).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProfileExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Profile/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProfile(int id)
+        {
+            var profile = await _context.Profiles.FindAsync(id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            _context.Profiles.Remove(profile);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool ProfileExists(int id)
+        {
+            return _context.Profiles.Any(e => e.Id == id);
         }
     }
 }

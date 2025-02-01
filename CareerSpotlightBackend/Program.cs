@@ -21,8 +21,13 @@ namespace CareerSpotlightBackend
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<CareerSpotlightContext>(options =>
-            options.UseSqlite("Data Source=CareerSpotlight.db"));
+            // Configure DbContext with detailed logging for debugging
+            var optionsBuilder = new DbContextOptionsBuilder<CareerSpotlightContext>();
+            optionsBuilder.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+                          .EnableSensitiveDataLogging()
+                          .LogTo(Console.WriteLine, LogLevel.Information);
+
+            builder.Services.AddSingleton(new CareerSpotlightContext(optionsBuilder.Options));
 
             var app = builder.Build();
 
@@ -35,10 +40,7 @@ namespace CareerSpotlightBackend
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();

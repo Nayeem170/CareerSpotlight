@@ -10,5 +10,13 @@ namespace CareerSpotlightBackend.Data
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Education> Educations { get; set; }
         public DbSet<Experience> Experiences { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Profile>().ToTable("profiles");
+            modelBuilder.Entity<Education>().ToTable("educations");
+            modelBuilder.Entity<Experience>().ToTable("experiences");
+
+        }
     }
 }

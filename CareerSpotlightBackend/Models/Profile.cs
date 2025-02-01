@@ -1,7 +1,10 @@
-﻿namespace CareerSpotlightBackend.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CareerSpotlightBackend.Models
 {
     public class Profile
     {
+        [Key]
         public int Id { get; set; }  // Primary key
         public string Name { get; set; }
         public string Bio { get; set; }
