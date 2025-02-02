@@ -5,3 +5,5 @@
 /CareerSpotlightConsoleApp/bin
 /CareerSpotlightBackend/out
 CareerSpotlightBackend/appsettings.Development.json
+/CareerSpotlightApi/bin
+/CareerSpotlightApi/obj
