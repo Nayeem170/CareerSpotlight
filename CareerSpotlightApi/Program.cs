@@ -1,17 +1,16 @@
 using CareerSpotlightApi.Data;
-using CareerSpotlightApi.Services.Interfaces;
+using CareerSpotlightApi.Middlewares;
+using CareerSpotlightApi.Models;
+using CareerSpotlightApi.Models.Settings;
+using CareerSpotlightApi.Providers;
 using CareerSpotlightApi.Services;
+using CareerSpotlightApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using CareerSpotlightApi.Models;
-using CareerSpotlightApi.Providers;
-using CareerSpotlightApi.Models.Settings;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Logging;
-using CareerSpotlightApi.Middlewares;
+using System.Text;
 
 namespace CareerSpotlightApi
 {
