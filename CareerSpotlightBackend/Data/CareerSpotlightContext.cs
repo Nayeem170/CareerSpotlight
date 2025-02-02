@@ -1,9 +1,10 @@
 ﻿using CareerSpotlightBackend.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CareerSpotlightBackend.Data
 {
-    public class CareerSpotlightContext : DbContext
+    public class CareerSpotlightContext : IdentityDbContext<User>
     {
         public CareerSpotlightContext(DbContextOptions<CareerSpotlightContext> options) : base(options) { }
 
@@ -13,10 +14,10 @@ namespace CareerSpotlightBackend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Profile>().ToTable("profiles");
             modelBuilder.Entity<Education>().ToTable("educations");
             modelBuilder.Entity<Experience>().ToTable("experiences");
-
         }
     }
 }

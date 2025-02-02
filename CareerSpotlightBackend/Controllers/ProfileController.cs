@@ -1,10 +1,12 @@
 ﻿using CareerSpotlightBackend.Data;
 using CareerSpotlightBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CareerSpotlightBackend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProfileController : ControllerBase

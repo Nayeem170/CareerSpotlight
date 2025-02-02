@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CareerSpotlightBackend.Migrations
 {
     [DbContext(typeof(CareerSpotlightContext))]
-    [Migration("20250201202950_InitialCreate")]
+    [Migration("20250202074059_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
