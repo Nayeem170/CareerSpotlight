@@ -7,3 +7,7 @@
 CareerSpotlightBackend/appsettings.Development.json
 /CareerSpotlightApi/bin
 /CareerSpotlightApi/obj
+/CareerSpotlightApp/bin
+/CareerSpotlightApp/obj
+/CareerSpotlightBase/obj
+/CareerSpotlightBase/bin

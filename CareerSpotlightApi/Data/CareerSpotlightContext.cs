@@ -1,4 +1,5 @@
 ﻿using CareerSpotlightApi.Models;
+using CareerSpotlightBase.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

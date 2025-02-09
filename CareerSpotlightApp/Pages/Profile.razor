@@ -1,0 +1,50 @@
+﻿@page "/profile"
+@using CareerSpotlightApp.Services
+@using CareerSpotlightBase.Models
+@using System.ComponentModel.DataAnnotations
+@inject ProfileService ProfileService
+
+<link href="css/profile.css" rel="stylesheet" />
+
+<h3>Profile Page</h3>
+
+<div class="profile-container">
+    @if (ProfileModel == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="profile-header">
+            <h4>@ProfileModel.Name</h4>
+            <p>@ProfileModel.Email</p>
+        </div>
+        <div class="profile-details">
+            <div class="profile-item">
+                <span class="label">Date of Birth:</span>
+                <span class="value">@ProfileModel.DateOfBirth.ToShortDateString()</span>
+            </div>
+            <div class="profile-item">
+                <span class="label">Address:</span>
+                <span class="value">@ProfileModel.Address</span>
+            </div>
+            <div class="profile-item">
+                <span class="label">Phone Number:</span>
+                <span class="value">@ProfileModel.PhoneNumber</span>
+            </div>
+            <div class="profile-item">
+                <span class="label">Bio:</span>
+                <span class="value">@ProfileModel.Bio</span>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private CareerSpotlightBase.Models.Profile ProfileModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProfileModel = await ProfileService.GetProfileAsync(0);
+    }
+}

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CareerSpotlightApi.Models
+namespace CareerSpotlightBase.Models
 {
     public class Experience
     {

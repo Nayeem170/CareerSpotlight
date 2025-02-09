@@ -1,5 +1,6 @@
 ﻿using CareerSpotlightApi.Data;
 using CareerSpotlightApi.Models;
+using CareerSpotlightBase.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

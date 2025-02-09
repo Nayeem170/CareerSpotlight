@@ -1,8 +1,13 @@
-﻿namespace CareerSpotlightApi.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CareerSpotlightApi.Models
 {
     public class VerificationModel
     {
-        public string? Email { get; set; }
-        public string? Code { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        public string Code { get; set; }
     }
 }

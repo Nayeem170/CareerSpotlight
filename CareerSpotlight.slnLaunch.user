@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "CareerSpotlightApi\\CareerSpotlightApi.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CareerSpotlightApp\\CareerSpotlightApp.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CareerSpotlightConsoleApp",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CareerSpotlightApi", "CareerSpotlightApi\CareerSpotlightApi.csproj", "{22C493A5-EA80-48F5-B230-E3D4BE7D3B96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CareerSpotlightApp", "CareerSpotlightApp\CareerSpotlightApp.csproj", "{B273B00E-A962-41E4-8CB0-270E09BCA1BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CareerSpotlightBase", "CareerSpotlightBase\CareerSpotlightBase.csproj", "{F089CCDC-4176-4B98-A17A-352398111FFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{22C493A5-EA80-48F5-B230-E3D4BE7D3B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22C493A5-EA80-48F5-B230-E3D4BE7D3B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22C493A5-EA80-48F5-B230-E3D4BE7D3B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B273B00E-A962-41E4-8CB0-270E09BCA1BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B273B00E-A962-41E4-8CB0-270E09BCA1BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B273B00E-A962-41E4-8CB0-270E09BCA1BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B273B00E-A962-41E4-8CB0-270E09BCA1BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F089CCDC-4176-4B98-A17A-352398111FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F089CCDC-4176-4B98-A17A-352398111FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F089CCDC-4176-4B98-A17A-352398111FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F089CCDC-4176-4B98-A17A-352398111FFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

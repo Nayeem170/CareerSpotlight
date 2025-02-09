@@ -24,5 +24,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CareerSpotlightBase\CareerSpotlightBase.csproj" />
+  </ItemGroup>
   
 </Project>

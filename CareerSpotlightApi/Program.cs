@@ -19,29 +19,41 @@ namespace CareerSpotlightApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = builder.Configuration;
+            var services = builder.Services;
 
-            builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
-            builder.Services.Configure<IdentitySettings>(builder.Configuration.GetSection("IdentitySettings"));
-            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            // Configure application settings
+            services.Configure<TokenSettings>(configuration.GetSection("TokenSettings"));
+            services.Configure<IdentitySettings>(configuration.GetSection("IdentitySettings"));
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
-            var jwtSettings = new JwtSettings();
-            builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
+            // Bind JWT settings
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? new JwtSettings();
+            var key = Encoding.ASCII.GetBytes(jwtSettings.Key ?? string.Empty);
 
-            // Add services to the container.
-            builder.Services.AddControllers()
-                .AddJsonOptions(options =>
+            // Add controllers with JSON serialization settings
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            });
+
+            // Configure CORS policy
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
                 {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                    policy.WithOrigins("https://localhost:7076")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
+            });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c =>
+            // Add Swagger documentation with JWT authentication
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-
-                // Add Bearer token authentication
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -51,71 +63,64 @@ namespace CareerSpotlightApi
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
-
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] {}
-                    }
-                });
-            });
-
-            var key = Encoding.ASCII.GetBytes(jwtSettings.Key ?? string.Empty);
-
-            builder.Services.AddDbContext<CareerSpotlightContext>(options =>
+        {
             {
-                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-                options.EnableSensitiveDataLogging(); // Enable detailed logging
-                options.LogTo(Console.WriteLine, LogLevel.Information); // Log SQL queries to console
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                },
+                Array.Empty<string>()
+            }
+        });
             });
 
-            builder.Services.AddIdentity<User, IdentityRole>()
+            // Configure database context
+            services.AddDbContext<CareerSpotlightContext>(options =>
+            {
+                options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging(); // For debugging only, disable in production
+                options.LogTo(Console.WriteLine, LogLevel.Information);
+            });
+
+            // Configure Identity services
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<CareerSpotlightContext>()
                 .AddTokenProvider<CustomTokenProvider<User>>("EmailVerification")
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+            // Configure JWT Authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.Issuer,
-                    ValidAudience = jwtSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidAudience = jwtSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(key)
+                    };
+                });
 
-            builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddSingleton<IEmailService, EmailService>();
+            // Register application services
+            services.AddSingleton<IJwtTokenService, JwtTokenService>();
+            services.AddSingleton<IEmailService, EmailService>();
 
-            var loggerFactory = LoggerFactory.Create(builder =>
+            // Configure logging
+            using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
             {
-                builder.AddConsole();
-                builder.AddDebug();
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
             });
             var logger = loggerFactory.CreateLogger<Program>();
-
-            builder.Services.AddSingleton(logger);
+            services.AddSingleton(logger);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure middleware pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -124,11 +129,12 @@ namespace CareerSpotlightApi
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
-
             app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+            app.MapControllers();
 
             app.Run();
         }

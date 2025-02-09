@@ -1,0 +1,61 @@
+﻿@page "/access"
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient HttpClient
+
+<h3>Email Access</h3>
+
+<div class="email-access-container">
+    <EditForm Model="emailModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <InputText id="email" @bind-Value="emailModel.Email" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
+    @if (isSuccess)
+    {
+        <p>Verification code sent to your email.</p>
+    }
+    @if (isError)
+    {
+        <p>An error occurred. Please try again.</p>
+    }
+</div>
+
+@code {
+    private EmailModel emailModel = new EmailModel();
+    private bool isSuccess = false;
+    private bool isError = false;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/email-access/send-code", emailModel);
+            if (response.IsSuccessStatusCode)
+            {
+                isSuccess = true;
+                isError = false;
+            }
+            else
+            {
+                isSuccess = false;
+                isError = true;
+            }
+        }
+        catch (Exception)
+        {
+            isSuccess = false;
+            isError = true;
+        }
+    }
+
+    public class EmailModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
+}
